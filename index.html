@@ -59,6 +59,8 @@
   .navlinks{display:flex;gap:6px}
   .navlinks a{font-size:13px;color:var(--soft);padding:8px 13px;border-radius:999px;transition:.2s;font-weight:400}
   .navlinks a:hover{color:var(--ink);background:rgba(127,179,255,.1)}
+  .navlinks a.nav-feature{background:linear-gradient(120deg,rgba(127,179,255,.14),rgba(201,166,255,.11));border:1px solid rgba(127,179,255,.26);color:var(--ink);font-weight:500}
+  .navlinks a.nav-feature:hover{background:linear-gradient(120deg,rgba(127,179,255,.24),rgba(201,166,255,.2));border-color:var(--blue)}
   @media(max-width:760px){.navlinks{display:none}}
 
   /* ---------- HERO ---------- */
@@ -80,7 +82,7 @@
   .avail{display:inline-flex;align-items:center;gap:9px;font-family:'Space Mono',monospace;
     font-size:12px;letter-spacing:.05em;color:var(--mint);
     background:rgba(124,231,192,.08);border:1px solid rgba(124,231,192,.28);
-    padding:8px 15px;border-radius:999px}
+    padding:8px 15px;border-radius:999px;pointer-events:auto}
   .avail i{width:8px;height:8px;border-radius:50%;background:var(--mint);
     animation:ping 2.2s ease-out infinite}
   @keyframes ping{0%{box-shadow:0 0 0 0 rgba(124,231,192,.55)}70%{box-shadow:0 0 0 9px rgba(124,231,192,0)}100%{box-shadow:0 0 0 0 rgba(124,231,192,0)}}
@@ -223,7 +225,7 @@
     <a href="#proof">Proof</a>
     <a href="#think">How I think</a>
     <a href="#start">Start</a>
-    <a href="/use-cases">Use case builder</a>
+    <a href="/use-cases" class="nav-feature">Use case builder</a>
     <a href="/contact">Work with me</a>
   </div>
 </nav>
@@ -239,7 +241,7 @@
           <span class="avatar-mono"><img src="https://gravatar.com/avatar/f10943a48512fc1af56f4de95c85a995e4c056358f53a9bba58010d0be8d2b53?s=400" alt="Nova" referrerpolicy="no-referrer"></span>
         </div>
       </div>
-      <span class="avail"><i></i> Open to projects, consultations, and collaborations</span>
+      <a class="avail" href="/contact"><i></i> Open to projects, consultations, and collaborations</a>
     </div>
     <div class="kick">Human-centered AI, systems that survive reality</div>
     <h1>
@@ -276,11 +278,11 @@
       <div class="toprow"><span class="badge rare">Rare</span><span class="tag-edu">higher-ed native</span></div>
       <h3>Private AI platforms inside real institutions</h3>
       <p class="lede">Ship a real AI application behind the single sign-on, the privacy law, and the procurement, not a demo.</p>
-      <p class="proof">This solution is a live multi-region AWS platform: a over tens of thousand-node Neo4j knowledge graph, university SAML single sign-on, vectorembeddings, and generation through Bedrock. It runs in production, behind a university login.</p>
+      <p class="proof">The live system is <a href="https://pathsengine.com" target="_blank" rel="noopener" style="color:var(--mint)">PATHS Engine</a>, built at the University of Delaware: a multi-region AWS platform with a Neo4j knowledge graph, SAML single sign-on, SageMaker embeddings, and Bedrock generation. Tens of thousands of graph nodes, running in production behind a campus login.</p>
       <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
       <div class="drawer"><div class="drawer-in">
         <span class="label">Where it is strong, where it is not</span>
-        <p>Most AI engineers have never shipped inside FERPA, campus networking, and institutional procurement, which makes this my rarest bankable skill. The Limit: I would love to consult on using Knowledge Graphs with AI. This works best as an ongoing engagement, not a quick project. </p>
+        <p>Most AI engineers have never shipped inside FERPA, campus networking, and institutional procurement. That is what makes this my rarest skill. Transparency: I invented PATHS Engine. The University of Delaware holds the IP. I surface it here not to represent it as my own product, but because it is the clearest proof of what I can build inside an institution. If your institution is interested in PATHS, reach out and I will connect you with the right people at UD. This kind of engagement works best as an ongoing collaboration, not a single project.</p>
       </div></div>
     </article>
 
@@ -476,7 +478,7 @@
     </div>
     <div class="tnode">
       <h3>A production AI platform behind university login <span class="stat">~30,000 graph nodes</span></h3>
-      <p>A multi-region AWS platform with a Neo4j knowledge graph, SAML single sign-on, embeddings on SageMaker, and Bedrock generation. <span class="repo">PATHS</span> is live and working in production.</p>
+      <p><a href="https://pathsengine.com" target="_blank" rel="noopener" style="color:var(--blue);font-family:'Space Mono',monospace;font-size:12px;background:rgba(255,255,255,.05);padding:1px 7px;border-radius:5px">PATHS Engine</a> transforms unstructured academic content into structured, institution-scale knowledge. A multi-region AWS platform: Neo4j knowledge graph, SAML single sign-on, SageMaker embeddings, Bedrock generation. Live in production at the University of Delaware. I invented this system. The university holds the IP. If your institution is interested in what PATHS does, I am the right first contact.</p>
     </div>
     <div class="tnode">
       <h3>AI learning systems with human review</h3>

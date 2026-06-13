@@ -30,6 +30,8 @@
   .navlinks a{font-size:13px;color:var(--soft);padding:8px 13px;border-radius:999px;transition:.2s;font-weight:400}
   .navlinks a:hover{color:var(--ink);background:rgba(127,179,255,.1)}
   .navlinks a.active{color:var(--ink)}
+  .navlinks a.nav-feature{background:linear-gradient(120deg,rgba(127,179,255,.14),rgba(201,166,255,.11));border:1px solid rgba(127,179,255,.26);color:var(--ink);font-weight:500}
+  .navlinks a.nav-feature:hover{background:linear-gradient(120deg,rgba(127,179,255,.24),rgba(201,166,255,.2));border-color:var(--blue)}
   @media(max-width:760px){.navlinks{display:none}}
 
   /* LAYOUT */
@@ -124,7 +126,7 @@
     <a href="/#where">Where it fits</a>
     <a href="/#proof">Proof</a>
     <a href="/#think">How I think</a>
-    <a href="/use-cases">Use case builder</a>
+    <a href="/use-cases" class="nav-feature">Use case builder</a>
     <a href="/contact">Work with me</a>
   </div>
 </nav>
