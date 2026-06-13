@@ -20,6 +20,7 @@
   ::selection{background:rgba(127,179,255,.3);color:#fff}
   a{color:var(--blue);text-decoration:none}
 
+
   /* NAV */
   nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,8,13,.85),rgba(7,8,13,.4));border-bottom:1px solid var(--line2);transition:padding .3s}
   nav.shrink{padding:10px 6vw}
@@ -229,7 +230,7 @@ const CAPS={
 };
 
 const R={
-  uni_privacy:    {h:'Private AI for your institution, running on your hardware',              b:'You need AI that works within your data boundaries. Nova builds systems that run on institutional hardware, never send student data to external vendors, and can be audited by your privacy office.',c:['local-llm','ferpa','rag','federated']},
+  uni_privacy:    {h:'Private AI for your institution, running on prem - your hardware',              b:'You need AI that works within your data boundaries. Nova builds systems that run on institutional hardware, never send student data to external vendors, and can be audited by your privacy office.',c:['local-llm','ferpa','rag','federated']},
   uni_knowledge:  {h:'Structure your institutional knowledge before it walks out the door',    b:'Your expertise lives in people\'s heads, old documents, and disconnected systems. Nova can help you map, structure, and activate that knowledge in ways that survive staff turnover and scale beyond a few experts.',c:['knowledge-graph','data-pipeline','human-review','rag']},
   uni_manual:     {h:'Automate the right higher ed workflows, keep humans where they matter',  b:'Higher education is full of repetitive tasks that drain faculty and staff time. Nova identifies what is safe to automate, builds the system, and keeps people in the loop where judgment is needed.',c:['agentic','data-pipeline','human-review','fullstack']},
   uni_start:      {h:'A grounded AI strategy built for how institutions actually work',        b:'Most AI consultants have never navigated FERPA, campus procurement, or university governance. Nova has. A first conversation can clarify where AI actually fits, and what to avoid.',c:['advisory','ferpa','privacy-arch','ai-literacy']},
