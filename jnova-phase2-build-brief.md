@@ -21,10 +21,17 @@ The site should be deployable on Vercel as a static export (no server required) 
 
 ### Step 1: scaffold the repo
 
-Create a GitHub repository named `jnova-site` (public or private, Nova's call). The structure should be:
+The repository `jevonia/jnova-consults` already exists on GitHub and is connected to Vercel. Clone it locally if not already done:
+
+```bash
+git clone https://github.com/jevonia/jnova-consults.git
+cd jnova-consults
+```
+
+The target folder structure inside the repo is:
 
 ```
-jnova-site/
+jnova-consults/
   index.html          ← the existing Nova_Can_Help.html, renamed
   use-cases/
     index.html        ← the use case builder page (new)
@@ -51,9 +58,9 @@ Vercel needs this to serve subdirectory index files cleanly:
 }
 ```
 
-### Step 3: connect Vercel to GitHub
+### Step 3: Vercel is already connected
 
-In vercel.com dashboard: New Project > Import Git Repository > select `jnova-site` > deploy. After this, every push to `main` auto-deploys to jnova.com. No CLI needed going forward.
+`jevonia/jnova-consults` is already linked to Vercel. Every push to `main` auto-deploys to jnova.com. No further setup needed. Confirm by checking the Vercel dashboard after the first push.
 
 ### Step 4: update nav in index.html
 
