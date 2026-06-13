@@ -25,6 +25,8 @@
   nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,8,13,.85),rgba(7,8,13,.4));border-bottom:1px solid var(--line2);transition:padding .3s}
   nav.shrink{padding:10px 6vw}
   .brand{display:flex;align-items:center;gap:11px;font-family:'Fraunces',serif;font-weight:900;font-size:21px;letter-spacing:-.01em;color:var(--ink)}
+  .brand-avatar{display:none;width:32px;height:32px;border-radius:50%;padding:2px;background:conic-gradient(from 200deg,var(--blue),var(--violet),var(--mint),var(--gold),var(--blue));overflow:hidden;flex-shrink:0;margin-left:4px}
+  .brand-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
   .orb{width:26px;height:26px;border-radius:50%;background:conic-gradient(from 200deg,var(--blue),var(--violet),var(--mint),var(--gold),var(--blue));box-shadow:0 0 22px rgba(127,179,255,.55);animation:spin 9s linear infinite;flex-shrink:0}
   @keyframes spin{to{transform:rotate(360deg)}}
   .navlinks{display:flex;gap:6px}
@@ -46,7 +48,7 @@
   .mob-nav a:hover{color:var(--ink)}
   .mob-nav a.nav-feature{color:var(--ink);font-weight:500;padding:13px 16px;margin-top:12px;background:linear-gradient(120deg,rgba(127,179,255,.14),rgba(201,166,255,.11));border-radius:10px;border:1px solid rgba(127,179,255,.26);border-bottom:none}
   .mob-nav a.nav-contact{color:var(--mint)}
-  @media(max-width:760px){.navlinks{display:none}.hamburger{display:flex}}
+  @media(max-width:760px){.navlinks{display:none}.hamburger{display:flex}.brand-avatar{display:flex}}
 
   /* PAGE HEADER */
   .page-head{padding:140px 6vw 56px;max-width:860px;margin:0 auto}
@@ -133,7 +135,7 @@
 <body>
 
 <nav id="nav">
-  <a class="brand" href="/"><span class="orb"></span>Nova</a>
+  <a class="brand" href="/"><span class="orb"></span>Nova<span class="brand-avatar"><img src="https://gravatar.com/avatar/f10943a48512fc1af56f4de95c85a995e4c056358f53a9bba58010d0be8d2b53?s=400" alt="Nova" referrerpolicy="no-referrer"></span></a>
   <div class="navlinks">
     <a href="/#help">What I help with</a>
     <a href="/#where">Where it fits</a>
