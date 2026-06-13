@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Can Help</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Sora:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07080d;
+    --bg2:#0b0e18;
+    --panel:#10131f;
+    --panel2:#161b2b;
+    --ink:#eef1f8;
+    --muted:#b3bcd6;
+    --soft:#7c87a6;
+    --blue:#7fb3ff;
+    --violet:#c9a6ff;
+    --mint:#7ce7c0;
+    --gold:#f0c66e;
+    --line:rgba(160,180,230,.14);
+    --line2:rgba(160,180,230,.08);
+    --rare:#7ce7c0;
+    --strong:#7fb3ff;
+    --found:#c9a6ff;
+    --radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Sora',sans-serif;
+    font-weight:300;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{background:rgba(127,179,255,.3);color:#fff}
+  a{color:var(--blue);text-decoration:none}
+
+  /* ---------- NAV ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:60;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 6vw;
+    backdrop-filter:blur(14px);
+    background:linear-gradient(180deg,rgba(7,8,13,.85),rgba(7,8,13,.4));
+    border-bottom:1px solid var(--line2);
+    transition:padding .3s;
+  }
+  nav.shrink{padding:10px 6vw}
+  .brand{display:flex;align-items:center;gap:11px;font-family:'Fraunces',serif;font-weight:900;font-size:21px;letter-spacing:-.01em}
+  .orb{width:26px;height:26px;border-radius:50%;
+    background:conic-gradient(from 200deg,var(--blue),var(--violet),var(--mint),var(--gold),var(--blue));
+    box-shadow:0 0 22px rgba(127,179,255,.55);animation:spin 9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .navlinks{display:flex;gap:6px}
+  .navlinks a{font-size:13px;color:var(--soft);padding:8px 13px;border-radius:999px;transition:.2s;font-weight:400}
+  .navlinks a:hover{color:var(--ink);background:rgba(127,179,255,.1)}
+  @media(max-width:760px){.navlinks{display:none}}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden}
+  #graph{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+  .hero-content{position:relative;z-index:10;padding:0 6vw;max-width:1120px;pointer-events:none}
+  .kick{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--blue);margin-bottom:26px;text-shadow:0 0 22px rgba(127,179,255,.5);opacity:0;animation:rise .9s .25s forwards}
+  .intro-row{display:flex;align-items:center;gap:18px;margin-bottom:22px;flex-wrap:wrap;opacity:0;animation:rise .9s .1s forwards}
+  .avatar{width:86px;height:86px;border-radius:50%;padding:3px;flex:0 0 auto;
+    background:conic-gradient(from 200deg,var(--blue),var(--violet),var(--mint),var(--gold),var(--blue));
+    box-shadow:0 0 30px rgba(127,179,255,.4)}
+  .avatar-inner{width:100%;height:100%;border-radius:50%;overflow:hidden;
+    background:radial-gradient(circle at 50% 32%,#1d2638,#0a0d16);
+    display:flex;align-items:center;justify-content:center}
+  .avatar-inner img{width:100%;height:100%;object-fit:cover;display:block}
+  .avatar-mono{font-family:'Fraunces',serif;font-weight:900;font-size:38px;line-height:1;
+    background:linear-gradient(120deg,var(--blue),var(--violet),var(--mint));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .avail{display:inline-flex;align-items:center;gap:9px;font-family:'Space Mono',monospace;
+    font-size:12px;letter-spacing:.05em;color:var(--mint);
+    background:rgba(124,231,192,.08);border:1px solid rgba(124,231,192,.28);
+    padding:8px 15px;border-radius:999px}
+  .avail i{width:8px;height:8px;border-radius:50%;background:var(--mint);
+    animation:ping 2.2s ease-out infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(124,231,192,.55)}70%{box-shadow:0 0 0 9px rgba(124,231,192,0)}100%{box-shadow:0 0 0 0 rgba(124,231,192,0)}}
+  .hero h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(44px,7.4vw,104px);line-height:1.05;letter-spacing:-.035em;margin-bottom:30px}
+  .hero h1 .line{display:block;opacity:0;animation:rise .9s forwards;margin-bottom:.18em}
+  .hero h1 .line:last-child{margin-bottom:0}
+  .hero h1 .line:nth-child(1){animation-delay:.35s}
+  .hero h1 .line:nth-child(2){animation-delay:.5s}
+  .hero h1 .line:nth-child(3){animation-delay:.65s}
+  .nova-name{font-style:normal;background:linear-gradient(110deg,var(--blue),var(--violet) 55%,var(--mint));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero h1 em{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--blue)}
+  .hero .sub{font-size:clamp(17px,1.7vw,22px);line-height:1.62;max-width:60ch;color:var(--muted);font-weight:300;opacity:0;animation:rise .9s .85s forwards}
+  .hero .sub b{color:var(--ink);font-weight:500}
+  .hint{margin-top:34px;font-family:'Space Mono',monospace;font-size:12px;color:var(--soft);letter-spacing:.08em;opacity:0;animation:fade 1.2s 1.6s forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fade{to{opacity:1}}
+  .scrollcue{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);z-index:10;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--soft);opacity:0;animation:fade 1.2s 1.9s forwards;text-align:center}
+  .scrollcue .arrow{display:block;margin:8px auto 0;width:1px;height:30px;background:linear-gradient(var(--blue),transparent);animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+  /* ---------- SECTIONS ---------- */
+  section.block{padding:100px 6vw;max-width:1240px;margin:0 auto;position:relative}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+  h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(32px,4.6vw,56px);line-height:1.02;letter-spacing:-.03em;margin-bottom:18px}
+  h2 em{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--blue)}
+  .lead{font-size:clamp(16px,1.5vw,19px);color:var(--muted);max-width:64ch;line-height:1.6;margin-bottom:46px}
+
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- CAPABILITY CARDS ---------- */
+  .tierbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px;align-items:center}
+  .tierbar .filterlbl{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin-right:6px}
+  .filterbtn{font-family:'Sora',sans-serif;font-size:13px;font-weight:500;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--line);padding:8px 16px;border-radius:999px;cursor:pointer;transition:.2s}
+  .filterbtn:hover{color:var(--ink);border-color:var(--blue)}
+  .filterbtn.active{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+
+  .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .card{
+    background:linear-gradient(165deg,var(--panel2),var(--panel));
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px;position:relative;overflow:hidden;
+    transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .25s,box-shadow .25s;
+  }
+  .card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent,var(--blue));opacity:.8}
+  .card[data-tier="rare"]{--accent:var(--rare)}
+  .card[data-tier="strong"]{--accent:var(--strong)}
+  .card[data-tier="found"]{--accent:var(--found)}
+  .card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 22px 60px rgba(0,0,0,.5),0 0 0 1px var(--accent)}
+  .card.hide{display:none}
+  .card .toprow{display:flex;align-items:center;gap:10px;margin-bottom:15px;flex-wrap:wrap}
+  .badge{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
+  .badge.rare{color:var(--rare);background:rgba(124,231,192,.12);border:1px solid rgba(124,231,192,.3)}
+  .badge.strong{color:var(--strong);background:rgba(127,179,255,.12);border:1px solid rgba(127,179,255,.3)}
+  .badge.found{color:var(--found);background:rgba(201,166,255,.12);border:1px solid rgba(201,166,255,.3)}
+  .tag-edu{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+  .card h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;line-height:1.12;letter-spacing:-.01em;margin-bottom:10px;color:var(--ink)}
+  .card .lede{font-style:italic;color:var(--muted);font-size:15.5px;line-height:1.5;margin-bottom:16px}
+  .card .proof{font-size:14.5px;color:var(--soft);line-height:1.6}
+  .card .proof b{color:var(--muted);font-weight:500}
+  .card .more{
+    margin-top:18px;display:inline-flex;align-items:center;gap:7px;
+    font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;
+    color:var(--accent);background:none;border:0;cursor:pointer;padding:0;transition:.2s
+  }
+  .card .more:hover{opacity:.7}
+  .card .more .chev{transition:transform .3s}
+  .card.open .more .chev{transform:rotate(180deg)}
+  .card .drawer{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.3,.7,.3,1);}
+  .card.open .drawer{max-height:340px}
+  .card .drawer-in{margin-top:16px;padding-top:16px;border-top:1px dashed var(--line)}
+  .card .drawer-in .label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:7px}
+  .card .drawer-in p{font-size:14px;color:var(--muted);line-height:1.6}
+  @media(max-width:760px){.cards{grid-template-columns:1fr}}
+
+  /* ---------- PATHWAYS ---------- */
+  .toggle{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:32px}
+  .toggle button{font-family:'Sora',sans-serif;font-size:14px;font-weight:500;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--line);padding:11px 20px;border-radius:12px;cursor:pointer;transition:.2s}
+  .toggle button:hover{color:var(--ink);border-color:var(--blue)}
+  .toggle button.active{background:linear-gradient(120deg,var(--blue),var(--violet));color:#08090d;border-color:transparent;font-weight:600}
+  .pane{display:none;grid-template-columns:repeat(2,1fr);gap:18px}
+  .pane.active{display:grid;animation:rise .5s}
+  .path{background:linear-gradient(165deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .path h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;letter-spacing:-.01em;margin-bottom:10px}
+  .path p{color:var(--muted);font-size:15px;margin-bottom:16px}
+  .path ul{list-style:none}
+  .path li{padding:8px 0 8px 24px;position:relative;color:var(--ink);font-size:15px;font-weight:300;border-bottom:1px solid var(--line2)}
+  .path li:last-child{border-bottom:0}
+  .path li:before{content:"";position:absolute;left:2px;top:16px;width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 10px var(--blue)}
+  @media(max-width:760px){.pane.active{grid-template-columns:1fr}}
+
+  /* ---------- PROOF TIMELINE ---------- */
+  .timeline{position:relative;padding-left:34px;margin-top:10px}
+  .timeline:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--blue),var(--violet),var(--mint));opacity:.5}
+  .tnode{position:relative;margin-bottom:30px;padding:24px 26px;background:linear-gradient(165deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--radius)}
+  .tnode:before{content:"";position:absolute;left:-34px;top:28px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--blue);box-shadow:0 0 0 5px rgba(127,179,255,.12)}
+  .tnode h3{font-family:'Fraunces',serif;font-weight:600;font-size:21px;letter-spacing:-.01em;margin-bottom:6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .tnode .stat{font-family:'Space Mono',monospace;font-size:12px;color:var(--mint);letter-spacing:.04em}
+  .tnode p{color:var(--muted);font-size:15px;line-height:1.6}
+  .tnode .repo{font-family:'Space Mono',monospace;font-size:12px;color:var(--soft);background:rgba(255,255,255,.05);padding:1px 7px;border-radius:5px}
+
+  /* ---------- PRINCIPLES ---------- */
+  .principles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .pr{padding:26px;border-radius:var(--radius);background:linear-gradient(165deg,rgba(127,179,255,.07),rgba(255,255,255,.02));border:1px solid var(--line)}
+  .pr b{font-family:'Fraunces',serif;font-weight:600;font-size:19px;color:var(--blue);display:block;margin-bottom:10px;letter-spacing:-.01em}
+  .pr p{color:var(--muted);font-size:14.5px;line-height:1.6}
+  @media(max-width:900px){.principles{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.principles{grid-template-columns:1fr}}
+
+  /* ---------- CTA ---------- */
+  .cta{margin:60px 6vw 30px;max-width:1240px;margin-left:auto;margin-right:auto;
+    background:linear-gradient(135deg,rgba(127,179,255,.16),rgba(201,166,255,.12),rgba(124,231,192,.1));
+    border:1px solid rgba(127,179,255,.3);border-radius:30px;padding:48px;
+    display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center;position:relative;overflow:hidden}
+  .cta:after{content:"";position:absolute;right:-100px;bottom:-100px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(127,179,255,.25),transparent 68%)}
+  .cta h2{margin-bottom:14px}
+  .cta p{color:var(--muted);font-size:16px;line-height:1.6;margin-bottom:14px}
+  .cta .ask{background:rgba(7,8,13,.5);border:1px solid var(--line);border-radius:var(--radius);padding:26px;position:relative;z-index:2}
+  .cta .ask strong{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:16px}
+  .cta .ask ul{list-style:none}
+  .cta .ask li{padding:10px 0;border-bottom:1px solid var(--line2);font-size:15px;color:var(--ink);font-weight:300}
+  .cta .ask li:last-child{border-bottom:0}
+  .cta .ask li:before{content:"\201C";color:var(--blue);font-family:'Fraunces',serif;font-size:18px;margin-right:4px}
+  .cta .ask li:after{content:"\201D";color:var(--blue);font-family:'Fraunces',serif;font-size:18px}
+  @media(max-width:760px){.cta{grid-template-columns:1fr;padding:34px}}
+
+  footer{text-align:center;padding:50px 6vw 70px;color:var(--soft);font-size:13px;line-height:1.8;border-top:1px solid var(--line2);margin-top:40px}
+  footer .fbrand{font-family:'Fraunces',serif;font-weight:600;color:var(--muted);font-size:16px;display:block;margin-bottom:8px}
+
+  @media(max-width:760px){section.block{padding:70px 6vw}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="brand"><span class="orb"></span>Nova</div>
+  <div class="navlinks">
+    <a href="#help">What I help with</a>
+    <a href="#where">Where it fits</a>
+    <a href="#proof">Proof</a>
+    <a href="#think">How I think</a>
+    <a href="#start">Start</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <canvas id="graph"></canvas>
+  <div class="hero-content">
+    <div class="intro-row">
+      <div class="avatar">
+        <div class="avatar-inner">
+          <!-- To add a photo: replace the line below with  <img src="nova.jpg" alt="Nova">  -->
+          <span class="avatar-mono"><img src="https://gravatar.com/avatar/f10943a48512fc1af56f4de95c85a995e4c056358f53a9bba58010d0be8d2b53?s=400" alt="Nova" referrerpolicy="no-referrer"></span>
+        </div>
+      </div>
+      <span class="avail"><i></i> Open to projects, consultations, and collaborations</span>
+    </div>
+    <div class="kick">Human-centered AI, systems that survive reality</div>
+    <h1>
+      <span class="line">Hi, I'm <span class="nova-name">Nova</span>.</span>
+      <span class="line">I can turn your data</span>
+      <span class="line">into <em>useful and private</em> technology.</span>
+    </h1>
+    <p class="sub">Twenty years shipping software inside higher education, now doing frontier-AI build work. <b>I make capable AI run on private institutional data without that data ever leaving the building.</b></p>
+    <p class="hint">move your cursor, the knowledge graph is listening</p>
+  </div>
+  <div class="scrollcue">scroll<span class="arrow"></span></div>
+</header>
+
+<!-- ============ WHAT I HELP WITH ============ -->
+<section class="block" id="help">
+  <div class="reveal">
+    <div class="eyebrow">What I can be useful for</div>
+    <h2>Pick what sounds like <em>your</em> hurdles.</h2>
+    <p class="lead">Every card is a conversation starter. They are ordered by how hard the skill is to find, not just how trendy it may sound. Tap "good to know" on any card for the candid technology read: where it is strong, and where it is not.</p>
+  </div>
+
+  <div class="tierbar reveal">
+    <span class="filterlbl">Filter:</span>
+    <button class="filterbtn active" data-filter="all">Everything</button>
+    <button class="filterbtn" data-filter="rare">Rare and differentiated</button>
+    <button class="filterbtn" data-filter="strong">Strong and in demand</button>
+    <button class="filterbtn" data-filter="found">Foundations</button>
+  </div>
+
+  <div class="cards">
+
+    <!-- RARE -->
+    <article class="card reveal" data-tier="rare">
+      <div class="toprow"><span class="badge rare">Rare</span><span class="tag-edu">higher-ed native</span></div>
+      <h3>Private AI platforms inside real institutions</h3>
+      <p class="lede">Ship a real AI application behind the single sign-on, the privacy law, and the procurement, not a demo.</p>
+      <p class="proof">This solution is a live multi-region AWS platform: a over tens of thousand-node Neo4j knowledge graph, university SAML single sign-on, vectorembeddings, and generation through Bedrock. It runs in production, behind a university login.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Most AI engineers have never shipped inside FERPA, campus networking, and institutional procurement, which makes this my rarest bankable skill. The Limit: I would love to consult on using Knowledge Graphs with AI. This works best as an ongoing engagement, not a quick project. </p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="rare">
+      <div class="toprow"><span class="badge rare">Rare</span></div>
+      <h3>On-prem and model-agnostic AI, where the data never leaves</h3>
+      <p class="lede">Run useful AI entirely on hardware you control, and swap the model without rewriting the app.</p>
+      <p class="proof">A containerized workspace points at a local model, a machine on the LAN, or a frontier API behind a single config switch, with read-only model mounts and an optional strict-network mode. The same rule holds across projects: the full model never leaves, only tiny adapters move.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Regulated sectors increasingly want AI that does not ship data to a vendor, and model-agnostic design hedges against lock-in and sudden price changes. The competing pitch, "your data stays in your own cloud tenant," is easier to buy than to self-host, so I have to defend why local beats a private endpoint, and how currently local-model quality has a real ceiling. Best where sovereignty is a hard requirement, and finding the right balance of frontier-AI and local-model quality is a challenge.</p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="rare">
+      <div class="toprow"><span class="badge rare">Rare</span><span class="tag-edu">higher-ed native</span></div>
+      <h3>Federated learning across institutions</h3>
+      <p class="lede">Train one shared model across several organizations while each one's data stays home.</p>
+      <p class="proof">A real Flower setup co-trains a small open model across simulated campuses, sharing only a couple of megabytes of LoRA adapters per round, with IID and non-IID data splits. A Delaware pilot backs it with a partner overview and a human scoring rubric.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>When privacy law blocks organizations from pooling data, federated learning is the standard technical answer. The candid read: Task specific ai models are a better fit for most institutions. But they are new and not yet widely adopted. If you are interested in federated learning, I can help you get started with a small pilot.</p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="rare">
+      <div class="toprow"><span class="badge rare">Rare</span></div>
+      <h3>Fine-tuning small open models on private data</h3>
+      <p class="lede">Make a small open model good enough at one institution-specific job, on commodity hardware.</p>
+      <p class="proof">Instruction-tuning on flashcard data with an Apple-Silicon training loop and ROUGE evaluation; a small LoRA classifier with real adapter checkpoints; and a full chain from a curriculum graph to generation to human-scored export to a fine-tuned model.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Clients with private data and limited budgets want a model they own that runs cheaply. The honest part: fine-tuning is frequently the wrong answer, and good prompting plus retrieval on a strong base model often wins.  I lead with "do you even need to fine-tune," then deliver if the answer is yes.</p>
+      </div></div>
+    </article>
+
+    <!-- STRONG -->
+    <article class="card reveal" data-tier="strong">
+      <div class="toprow"><span class="badge strong">In demand</span></div>
+      <h3>Retrieval and knowledge-graph grounding</h3>
+      <p class="lede">Answers tied to their sources, using vectors, a graph, or both, with hallucinations engineered out.</p>
+      <p class="proof">A Neo4j knowledge graph combined with embeddings and topic extraction into structured learning objects, plus a strict rule in one project that every extracted claim must be a verbatim substring of its source.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>"Chat with our documents" is the default ask, and grounding is exactly where most implementations fall down. Basic retrieval is commoditizing fast, so the technology alone will not command a premium. My edge is the grounding discipline and the graph modeling, which clients tend to underrate until a bad answer costs them something.</p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="strong">
+      <div class="toprow"><span class="badge strong">In demand</span></div>
+      <h3>Honest AI evaluation and measurement</h3>
+      <p class="lede">Prove whether an AI change actually helped, using graders that do not flatter the model.</p>
+      <p class="proof">A capability-lift harness with a deterministic grader contract, verbatim-grounding validation after each model call, and human scoring rubrics for educational content rated on usefulness, correctness, source grounding, and pedagogical value.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Many teams have shipped AI features and cannot tell whether they work, so honest measurement stands out against vendors who grade their own homework. The candid read: my own eval tooling is early and the field has funded players. I sell the discipline and the deterministic-grader rigor, and I am upfront that the tooling itself is young.</p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="strong">
+      <div class="toprow"><span class="badge strong">In demand</span></div>
+      <h3>Human-in-the-loop data pipelines</h3>
+      <p class="lede">Turn raw institutional content into reviewed, scored, model-ready training data.</p>
+      <p class="proof">A pipeline that generates case studies, routes them through a review-and-scoring interface, and exports the approved ones as training data, orchestrated for concurrency, with state-machine review agents that put a human in the loop.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Good fine-tuning and good evaluation both die without good data, and most organizations have no pipeline for producing it. The honest limit: the value depends on the client supplying subject-matter reviewers, which is usually the real bottleneck, and the output quality at scale is not yet shown. It needs careful framing, because it is the highest-leverage step even when it reads as unglamorous.</p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="strong">
+      <div class="toprow"><span class="badge strong">In demand</span></div>
+      <h3>Agentic systems and reusable tooling</h3>
+      <p class="lede">Agents that hold state, hand off to humans, and reuse documented skills instead of starting cold.</p>
+      <p class="proof">State-machine dialogue agents with shared cloud and graph utilities, plus a command-line tool that catalogs, searches, and lints the reusable "skills" agents read, treating skills as a compounding multiplier across projects.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Agentic workflows are the dominant theme of the moment, and tooling that manages prompts and skills as versioned assets is underserved. This is also the most crowded space here, every framework is fighting for it, and my agent code is personal-scale rather than a hardened product. I sell the patterns and the discipline, not the specific tools.</p>
+      </div></div>
+    </article>
+
+    <!-- FOUNDATIONS -->
+    <article class="card reveal" data-tier="found">
+      <div class="toprow"><span class="badge found">Foundation</span></div>
+      <h3>Full-stack application engineering</h3>
+      <p class="lede">Ship the whole thing: backend, database, frontend, and the streaming interface on top.</p>
+      <p class="proof">Flask and PHP backends, a substantial scheduling app with a full database schema and calendar integration, server-sent-event token streaming, and a React-and-D3 front end for graph visualization.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Every AI project still needs a working application wrapped around the model, and building that myself means no handoff and one person who understands the whole path. This is table stakes, though. It will not win a bid on its own. It matters as evidence that I can deliver end to end.</p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="found">
+      <div class="toprow"><span class="badge found">Foundation</span><span class="tag-edu">higher-ed native</span></div>
+      <h3>Accessibility and multimodal engineering</h3>
+      <p class="lede">Real-time media features for learning, from audio-described lectures to perception in a room.</p>
+      <p class="proof">A browser extension for lecture audio description with scene-change detection, silence-gated speech, and live and replay modes, plus a camera-feed prototype with gesture detection and vision-model recognition.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Accessibility compliance is a standing budget line in education and government, and AI-assisted accessibility is an underserved niche. Be careful here: the description endpoint is currently a mock and the camera work is an early proof of concept, so the AI parts are designed more than shipped. I sell the client-side engineering and the accessibility framing honestly, without implying a finished product exists.</p>
+      </div></div>
+    </article>
+
+    <article class="card reveal" data-tier="found">
+      <div class="toprow"><span class="badge found">Foundation</span><span class="tag-edu">higher-ed native</span></div>
+      <h3>Twenty years of shipping, with higher-ed fluency</h3>
+      <p class="lede">A long record of shipping, plus knowing how a university actually works.</p>
+      <p class="proof">The whole portfolio, and specifically the higher-ed-native choices: single sign-on, FERPA-shaped design, university deployments, and faculty-facing documentation that real instructors use.</p>
+      <button class="more" aria-expanded="false"><span>good to know</span><span class="chev">v</span></button>
+      <div class="drawer"><div class="drawer-in">
+        <span class="label">Where it is strong, where it is not</span>
+        <p>Domain fluency shortens every engagement and de-risks delivery, and a twenty-year record of shipping is a trust signal that hype cannot fake. The honest framing: experience is a multiplier on the skills above, not a product I can invoice for on its own. It gets me in the room and keeps me there.</p>
+      </div></div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ WHERE IT FITS ============ -->
+<section class="block" id="where">
+  <div class="reveal">
+    <div class="eyebrow">Where this can help you</div>
+    <h2>Different worlds, <em>concrete</em> entry points.</h2>
+    <p class="lead">Switch the view to see where I tend to fit. The goal is to help friends, family, colleagues, and project leads recognize where a real collaboration could begin.</p>
+  </div>
+  <div class="toggle reveal">
+    <button class="active" data-pane="he">Higher education</button>
+    <button data-pane="np">Nonprofits and community orgs</button>
+    <button data-pane="sb">Small teams and founders</button>
+  </div>
+
+  <div class="pane active" id="he">
+    <div class="path">
+      <h3>Faculty and student support</h3>
+      <p>Tools that help instructors and students work with course content more intelligently.</p>
+      <ul><li>Transcript-to-study-aid workflows</li><li>Faculty review dashboards</li><li>AI-generated case studies with human scoring</li><li>Course knowledge graphs and topic maps</li></ul>
+    </div>
+    <div class="path">
+      <h3>Institutional AI pilots</h3>
+      <p>Pilots that do not collapse under privacy, governance, or evaluation questions.</p>
+      <ul><li>Use-case selection and scoping</li><li>Data boundary planning</li><li>Reviewer rubrics and escalation logic</li><li>Federated collaboration across campuses</li></ul>
+    </div>
+  </div>
+
+  <div class="pane" id="np">
+    <div class="path">
+      <h3>Mission-centered knowledge systems</h3>
+      <p>Help organize the knowledge already living in documents, meetings, and people's heads.</p>
+      <ul><li>Resource and program knowledge bases</li><li>Community intake workflows</li><li>Private AI assistants for internal use</li><li>Grant and reporting knowledge maps</li></ul>
+    </div>
+    <div class="path">
+      <h3>Ethical automation</h3>
+      <p>Automate the boring parts without automating away care, consent, or community trust.</p>
+      <ul><li>Volunteer coordination</li><li>Case notes and summaries</li><li>Donor and program reporting</li><li>Human review before any outreach</li></ul>
+    </div>
+  </div>
+
+  <div class="pane" id="sb">
+    <div class="path">
+      <h3>Operations cleanup</h3>
+      <p>Make the invisible work visible, then automate the parts that are safe and useful.</p>
+      <ul><li>Calendars, forms, and spreadsheet cleanup</li><li>AI-assisted document routing</li><li>Internal dashboards</li><li>Custom lightweight apps</li></ul>
+    </div>
+    <div class="path">
+      <h3>AI without the circus</h3>
+      <p>Separate hype from practical value, then build a small thing that proves the point.</p>
+      <ul><li>AI workflow audit</li><li>A retrieval prototype on your own data</li><li>Staff training in plain language</li><li>Prototype-to-production planning</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROOF ============ -->
+<section class="block" id="proof">
+  <div class="reveal">
+    <div class="eyebrow">Proof that I ship</div>
+    <h2>Durable systems, <em>not</em> clever demos.</h2>
+    <p class="lead">These are the patterns behind the pitch. Real things, running for real, drawn from a survey of seventeen project directories.</p>
+  </div>
+  <div class="timeline reveal">
+    <div class="tnode">
+      <h3>Lecture capture at campus scale <span class="stat">200+ rooms / 15+ yrs / 300+ classes a semester</span></h3>
+      <p>Built and deployed end to end: Mac Minis running Zoom on the backend, Google Calendar scheduling, and connections into Kaltura and Canvas. That kind of long-running infrastructure is not theoretical.</p>
+    </div>
+    <div class="tnode">
+      <h3>A production AI platform behind university login <span class="stat">~30,000 graph nodes</span></h3>
+      <p>A multi-region AWS platform with a Neo4j knowledge graph, SAML single sign-on, embeddings on SageMaker, and Bedrock generation. <span class="repo">PATHS</span> is live and working in production.</p>
+    </div>
+    <div class="tnode">
+      <h3>AI learning systems with human review</h3>
+      <p>Workflows that transform course transcripts into topics, study aids, case studies, flashcards, and reviewable learning objects, with faculty validation before anything reaches a student.</p>
+    </div>
+    <div class="tnode">
+      <h3>Federated learning across campuses</h3>
+      <p>A multi-institution pilot where universities collaborate on educational AI models while every institution's data stays local. Only tiny model adapters cross the wire.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW I THINK ============ -->
+<section class="block" id="think">
+  <div class="reveal">
+    <div class="eyebrow">How I think about AI</div>
+    <h2>These are not disclaimers. They are <em>design principles.</em></h2>
+    <p class="lead">They shape architecture, workflow, evaluation, and who gets a voice in the room.</p>
+  </div>
+  <div class="principles reveal">
+    <div class="pr"><b>Privacy is architecture</b><p>It cannot be sprinkled on after launch. It shapes where data lives, which models run, who sees outputs, and what leaves the organization.</p></div>
+    <div class="pr"><b>Humans stay in the loop</b><p>AI can draft, summarize, and suggest. People still review, judge, contextualize, approve, and challenge.</p></div>
+    <div class="pr"><b>Evaluation is care</b><p>If a system touches learning, resources, or trust, it needs rubrics, samples, and thresholds. "Looks good" is not enough.</p></div>
+    <div class="pr"><b>Impact before novelty</b><p>The best project is not the flashiest one. It is the one that helps real people and survives after the demo glow fades.</p></div>
+    <div class="pr"><b>Local knowledge matters</b><p>Institutions already hold wisdom. The work is to structure, protect, and activate it, not replace it with generic answers.</p></div>
+    <div class="pr"><b>Build with people, not at them</b><p>Good systems include the people affected by them: faculty, staff, students, reviewers, and the folks doing the daily work.</p></div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta reveal" id="start">
+  <div>
+    <div class="eyebrow">How to think of me for a project</div>
+    <h2>Bring me in when an idea needs to become a <em>real system.</em></h2>
+    <p>If a project has valuable knowledge, messy workflows, privacy concerns, human-review needs, or an AI idea that needs grounding, I can help scope it, design it, build a prototype, evaluate it, document it, or translate it for the people who need to understand it. That holds whether you are one person turning an idea over or a business weighing a bigger move. Sometimes the most useful thing is a single good conversation, sometimes it is a system that runs for years.</p>
+    <p><b style="color:var(--ink);font-weight:500">Best-fit work:</b> higher education, nonprofits, community organizations, learning and knowledge systems, privacy-aware AI, local-model workflows, and small teams that need senior technical judgment.</p>
+  </div>
+  <div class="ask">
+    <strong>Good ways to start a conversation</strong>
+    <ul>
+      <li>We have documents and data, and we want to use AI safely.</li>
+      <li>Our workflow is too manual and nobody has time.</li>
+      <li>We need a pilot, but we do not know what success means.</li>
+      <li>We need AI help, but privacy and trust matter.</li>
+      <li>We need someone who can explain it and build it.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <span class="fbrand">Nova</span>
+  AI systems strategist · full-stack software engineer · higher-ed technologist · privacy-aware builder<br>
+  This page is a conversation tool, not a full resume. It is built to help people recognize where a meaningful collaboration could begin.
+</footer>
+
+<script>
+/* ---- nav shrink ---- */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{nav.classList.toggle('shrink',scrollY>40);});
+
+/* ---- reactive knowledge graph ---- */
+(function(){
+  const canvas=document.getElementById('graph');
+  const ctx=canvas.getContext('2d');
+  let w,h,nodes=[],mouse={x:-999,y:-999};
+  const COLORS=['#7fb3ff','#c9a6ff','#7ce7c0','#f0c66e'];
+  function resize(){
+    const r=canvas.getBoundingClientRect();
+    w=canvas.width=r.width*devicePixelRatio;
+    h=canvas.height=r.height*devicePixelRatio;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+    build();
+  }
+  function build(){
+    nodes=[];
+    const cw=w/devicePixelRatio,ch=h/devicePixelRatio;
+    const count=Math.min(70,Math.floor(cw*ch/13000));
+    for(let i=0;i<count;i++){
+      nodes.push({
+        x:Math.random()*cw,y:Math.random()*ch,
+        vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22,
+        r:Math.random()*2.4+1.3,
+        c:COLORS[Math.floor(Math.random()*COLORS.length)]
+      });
+    }
+  }
+  const hero=document.querySelector('.hero');
+  hero.addEventListener('mousemove',e=>{
+    const r=canvas.getBoundingClientRect();
+    mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;
+  });
+  hero.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999;});
+  hero.addEventListener('touchmove',e=>{
+    const r=canvas.getBoundingClientRect();const t=e.touches[0];
+    mouse.x=t.clientX-r.left;mouse.y=t.clientY-r.top;
+  },{passive:true});
+  function tick(){
+    const cw=w/devicePixelRatio,ch=h/devicePixelRatio;
+    ctx.clearRect(0,0,cw,ch);
+    for(const n of nodes){
+      n.x+=n.vx;n.y+=n.vy;
+      if(n.x<0||n.x>cw)n.vx*=-1;
+      if(n.y<0||n.y>ch)n.vy*=-1;
+      const dx=n.x-mouse.x,dy=n.y-mouse.y,d=Math.hypot(dx,dy);
+      if(d<170){const f=(170-d)/170*1.5;n.x+=dx/d*f;n.y+=dy/d*f;}
+    }
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const a=nodes[i],b=nodes[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(d<135){
+          ctx.globalAlpha=(1-d/135)*.45;
+          ctx.strokeStyle='#5e7bbf';ctx.lineWidth=.6;
+          ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+        }
+      }
+    }
+    for(const n of nodes){
+      const dm=Math.hypot(n.x-mouse.x,n.y-mouse.y);
+      const near=dm<170;
+      ctx.globalAlpha=1;ctx.fillStyle=n.c;
+      ctx.shadowColor=n.c;ctx.shadowBlur=near?17:7;
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*(near?1.7:1),0,7);ctx.fill();
+    }
+    ctx.shadowBlur=0;
+    requestAnimationFrame(tick);
+  }
+  addEventListener('resize',resize);resize();tick();
+})();
+
+/* ---- capability card drawers ---- */
+document.querySelectorAll('.card .more').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const card=btn.closest('.card');
+    const open=card.classList.toggle('open');
+    btn.setAttribute('aria-expanded',open);
+    btn.querySelector('span').textContent=open?'show less':'good to know';
+  });
+});
+
+/* ---- tier filter ---- */
+const filterBtns=document.querySelectorAll('.filterbtn');
+filterBtns.forEach(b=>b.addEventListener('click',()=>{
+  filterBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const f=b.dataset.filter;
+  document.querySelectorAll('.card').forEach(c=>{
+    c.classList.toggle('hide', f!=='all' && c.dataset.tier!==f);
+  });
+}));
+
+/* ---- pathway toggle ---- */
+const toggleBtns=document.querySelectorAll('.toggle button');
+toggleBtns.forEach(b=>b.addEventListener('click',()=>{
+  toggleBtns.forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  b.classList.add('active');
+  document.getElementById(b.dataset.pane).classList.add('active');
+}));
+
+/* ---- scroll reveal ---- */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{
+  el.style.transitionDelay=(i%3*60)+'ms';
+  io.observe(el);
+});
+</script>
+</body>
+</html>
