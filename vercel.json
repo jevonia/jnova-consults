@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/use-cases", "destination": "/use-cases/index.html" },
+    { "source": "/contact",   "destination": "/contact/index.html"   }
+  ]
+}

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work with me · Nova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Sora:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07080d;--bg2:#0b0e18;--panel:#10131f;--panel2:#161b2b;
+    --ink:#eef1f8;--muted:#b3bcd6;--soft:#7c87a6;
+    --blue:#7fb3ff;--violet:#c9a6ff;--mint:#7ce7c0;--gold:#f0c66e;
+    --line:rgba(160,180,230,.14);--line2:rgba(160,180,230,.08);--radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Sora',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden}
+  ::selection{background:rgba(127,179,255,.3);color:#fff}
+  a{color:var(--blue);text-decoration:none}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,8,13,.85),rgba(7,8,13,.4));border-bottom:1px solid var(--line2);transition:padding .3s}
+  nav.shrink{padding:10px 6vw}
+  .brand{display:flex;align-items:center;gap:11px;font-family:'Fraunces',serif;font-weight:900;font-size:21px;letter-spacing:-.01em;color:var(--ink)}
+  .orb{width:26px;height:26px;border-radius:50%;background:conic-gradient(from 200deg,var(--blue),var(--violet),var(--mint),var(--gold),var(--blue));box-shadow:0 0 22px rgba(127,179,255,.55);animation:spin 9s linear infinite;flex-shrink:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .navlinks{display:flex;gap:6px}
+  .navlinks a{font-size:13px;color:var(--soft);padding:8px 13px;border-radius:999px;transition:.2s;font-weight:400}
+  .navlinks a:hover{color:var(--ink);background:rgba(127,179,255,.1)}
+  .navlinks a.active{color:var(--ink)}
+  @media(max-width:760px){.navlinks{display:none}}
+
+  /* LAYOUT */
+  .page-wrap{max-width:1120px;margin:0 auto;padding:130px 6vw 100px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+  @media(max-width:820px){.page-wrap{grid-template-columns:1fr;gap:48px;padding-top:110px}}
+
+  /* LEFT COLUMN */
+  .eyebrow{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+  .left h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(34px,4.2vw,54px);line-height:1.06;letter-spacing:-.03em;margin-bottom:10px}
+  .left .sub{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:19px;color:var(--muted);margin-bottom:32px;line-height:1.45}
+  .avail{display:inline-flex;align-items:center;gap:9px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.05em;color:var(--mint);background:rgba(124,231,192,.08);border:1px solid rgba(124,231,192,.28);padding:8px 15px;border-radius:999px;margin-bottom:34px}
+  .avail i{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:ping 2.2s ease-out infinite;flex-shrink:0}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(124,231,192,.55)}70%{box-shadow:0 0 0 9px rgba(124,231,192,0)}100%{box-shadow:0 0 0 0 rgba(124,231,192,0)}}
+  .good-ways{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+  .starts{list-style:none}
+  .starts li{padding:11px 0;border-bottom:1px solid var(--line2);font-size:15px;color:var(--ink);font-weight:300;position:relative;padding-left:22px}
+  .starts li:first-child{border-top:1px solid var(--line2)}
+  .starts li::before{content:'\201C';color:var(--blue);font-family:'Fraunces',serif;font-size:17px;position:absolute;left:0;top:10px}
+
+  /* BUILDER BANNER */
+  .builder-banner{background:rgba(127,179,255,.07);border:1px solid rgba(127,179,255,.2);border-radius:14px;padding:16px 20px;margin-bottom:26px;display:none}
+  .builder-banner.show{display:block}
+  .bb-label{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+  .bb-pills{display:flex;gap:7px;flex-wrap:wrap}
+  .bb-pill{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.05em;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--soft)}
+
+  /* FORM */
+  .form-wrap{background:linear-gradient(165deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:24px;padding:38px}
+  @media(max-width:480px){.form-wrap{padding:24px 18px}}
+  .field{margin-bottom:22px}
+  label{display:block;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  input[type=text],input[type=email],select,textarea{
+    width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(160,180,230,.14);
+    border-radius:10px;padding:12px 14px;
+    font-family:'Sora',sans-serif;font-size:15px;font-weight:300;color:var(--ink);
+    transition:border-color .2s,box-shadow .2s;outline:none;
+    -webkit-appearance:none;appearance:none;
+  }
+  input[type=text]::placeholder,input[type=email]::placeholder,textarea::placeholder{color:var(--soft)}
+  input[type=text]:focus,input[type=email]:focus,select:focus,textarea:focus{
+    border-color:var(--blue);box-shadow:0 0 0 3px rgba(127,179,255,.15);
+  }
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237c87a6' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+  select option{background:#10131f;color:var(--ink)}
+  textarea{resize:vertical;min-height:100px;line-height:1.6}
+
+  /* RADIO CARDS */
+  .radio-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media(max-width:480px){.radio-grid{grid-template-columns:1fr}}
+  .radio-label{display:none}
+  .radio-card{
+    display:block;padding:14px 16px;
+    background:rgba(255,255,255,.03);border:1px solid rgba(160,180,230,.14);
+    border-radius:12px;cursor:pointer;
+    font-size:14px;color:var(--muted);line-height:1.4;
+    transition:border-color .2s,color .2s,box-shadow .2s;
+    position:relative;
+  }
+  .radio-card:hover{border-color:var(--blue);color:var(--ink)}
+  input[type=radio]:checked+.radio-card{border-color:var(--blue);color:var(--ink);box-shadow:0 0 0 1px var(--blue),0 8px 24px rgba(0,0,0,.4)}
+  input[type=radio]:checked+.radio-card::after{content:"✓";position:absolute;top:10px;right:12px;font-size:11px;color:var(--blue);font-weight:700}
+  input[type=radio]{position:absolute;opacity:0;pointer-events:none}
+
+  /* SUBMIT */
+  .submit-btn{
+    width:100%;padding:15px;border-radius:999px;
+    background:linear-gradient(120deg,var(--blue),var(--violet));
+    color:#07080d;font-family:'Sora',sans-serif;font-weight:600;font-size:15px;
+    border:none;cursor:pointer;transition:.2s;margin-top:4px;
+  }
+  .submit-btn:hover{opacity:.88;transform:translateY(-1px)}
+  .submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .form-error{font-size:13px;color:#ff7eb3;margin-top:10px;display:none}
+
+  /* SUCCESS */
+  #success{display:none;text-align:center;padding:48px 24px}
+  #success h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(26px,3.5vw,38px);letter-spacing:-.03em;margin-bottom:14px}
+  #success p{font-size:16px;color:var(--muted);margin-bottom:28px;line-height:1.65}
+  #success svg{margin-bottom:28px;opacity:.6}
+  .back-link{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--blue)}
+
+  footer{text-align:center;padding:50px 6vw 70px;color:var(--soft);font-size:13px;line-height:1.8;border-top:1px solid var(--line2)}
+  footer .fbrand{font-family:'Fraunces',serif;font-weight:600;color:var(--muted);font-size:16px;display:block;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="/"><span class="orb"></span>Nova</a>
+  <div class="navlinks">
+    <a href="/#help">What I help with</a>
+    <a href="/#where">Where it fits</a>
+    <a href="/#proof">Proof</a>
+    <a href="/#think">How I think</a>
+    <a href="/use-cases">Use case builder</a>
+    <a href="/contact">Work with me</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="eyebrow">Start a conversation</div>
+    <h1>Let's think through it together.</h1>
+    <p class="sub">Whether it's a quick question or a real project, the conversation is free.</p>
+    <div class="avail"><i></i> Open to projects, consultations, and collaborations</div>
+
+    <div class="good-ways">Good ways to start</div>
+    <ul class="starts">
+      <li>We have documents and data, and we want to use AI safely.</li>
+      <li>Our workflow is too manual and nobody has time.</li>
+      <li>We need a pilot, but we do not know what success means.</li>
+      <li>We need AI help, but privacy and trust matter.</li>
+      <li>We need someone who can explain it and build it.</li>
+    </ul>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <div class="builder-banner" id="banner">
+      <div class="bb-label">Based on what you shared in the use case builder</div>
+      <div class="bb-pills" id="banner-pills"></div>
+    </div>
+
+    <div class="form-wrap" id="form-wrap">
+      <form id="contact-form" action="https://formspree.io/f/maqzlrpq" method="POST" novalidate>
+
+        <div class="field">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required autocomplete="name">
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email">
+        </div>
+
+        <div class="field">
+          <label for="who">You are...</label>
+          <select id="who" name="who">
+            <option value="">Select one</option>
+            <option value="a university">A university, college, or K-12 institution</option>
+            <option value="a nonprofit">A nonprofit or community organization</option>
+            <option value="a small team">A small team or founder</option>
+            <option value="an individual">An individual with a project</option>
+            <option value="something else">Something else</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="project">What are you working on? <span style="color:var(--soft);font-size:10px;letter-spacing:0;text-transform:none">(optional)</span></label>
+          <textarea id="project" name="project" rows="4" placeholder="No need to have it figured out. A sentence or two is enough."></textarea>
+        </div>
+
+        <div class="field">
+          <label>How would you like to start?</label>
+          <div class="radio-grid">
+            <label>
+              <input type="radio" name="start_type" value="A quick 30-minute call">
+              <span class="radio-card">A quick 30-minute call</span>
+            </label>
+            <label>
+              <input type="radio" name="start_type" value="An email exchange first">
+              <span class="radio-card">An email exchange first</span>
+            </label>
+            <label>
+              <input type="radio" name="start_type" value="Send me a brief proposal scope">
+              <span class="radio-card">Send me a brief proposal scope</span>
+            </label>
+            <label>
+              <input type="radio" name="start_type" value="I am not sure yet">
+              <span class="radio-card">I am not sure yet</span>
+            </label>
+          </div>
+        </div>
+
+        <button class="submit-btn" type="submit" id="submit-btn">Start the conversation</button>
+        <div class="form-error" id="form-error">Something went wrong. Please try again or email directly.</div>
+
+      </form>
+    </div>
+
+    <div id="success">
+      <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="28" cy="28" r="27" stroke="#7ce7c0" stroke-width="1.5"/>
+        <path d="M17 28l8 8 14-16" stroke="#7ce7c0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h2>Got it. I will be in touch.</h2>
+      <p>Thanks for reaching out. Expect to hear back within a day or two.</p>
+      <a class="back-link" href="/use-cases">Share the use case builder with someone else</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <span class="fbrand">Nova</span>
+  AI systems strategist · full-stack software engineer · higher-ed technologist · privacy-aware builder<br>
+  <a href="/">Back to the main page</a>
+</footer>
+
+<script>
+addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('shrink',scrollY>40)});
+
+/* active nav */
+document.querySelectorAll('.navlinks a').forEach(a=>{
+  if(a.getAttribute('href')===location.pathname)a.classList.add('active');
+});
+
+/* read query string from use-case builder */
+const WHO_LBL    ={uni:'University or K-12', np:'Nonprofit or community org', team:'Small team or founder', ind:'Individual'};
+const PROBLEM_LBL={knowledge:'Knowledge in people\'s heads', privacy:'Data cannot leave', manual:'Too manual and slow', start:'Don\'t know where to start', collab:'Need a collaborator who explains'};
+const PRIORITY_LBL={prototype:'Working prototype fast', arch:'Architecture first', training:'Train the team', measure:'Measure the impact', convo:'Start with a conversation'};
+const WHO_TO_SELECT={uni:'a university', np:'a nonprofit', team:'a small team', ind:'an individual'};
+
+(function(){
+  const p=new URLSearchParams(location.search);
+  const who=p.get('who'),problem=p.get('problem'),priority=p.get('priority');
+  if(!who&&!problem&&!priority)return;
+
+  const banner=document.getElementById('banner');
+  const pills=document.getElementById('banner-pills');
+  banner.classList.add('show');
+  [WHO_LBL[who],PROBLEM_LBL[problem],PRIORITY_LBL[priority]].filter(Boolean).forEach(l=>{
+    const el=document.createElement('span');el.className='bb-pill';el.textContent=l;pills.appendChild(el);
+  });
+
+  if(WHO_TO_SELECT[who]){
+    const sel=document.getElementById('who');
+    for(const opt of sel.options){if(opt.value===WHO_TO_SELECT[who]){opt.selected=true;break;}}
+  }
+})();
+
+/* form submission */
+document.getElementById('contact-form').addEventListener('submit',async function(e){
+  e.preventDefault();
+  const btn=document.getElementById('submit-btn');
+  const errEl=document.getElementById('form-error');
+  btn.disabled=true;btn.textContent='Sending...';errEl.style.display='none';
+
+  try{
+    const res=await fetch('https://formspree.io/f/maqzlrpq',{
+      method:'POST',
+      headers:{Accept:'application/json'},
+      body:new FormData(this),
+    });
+    const data=await res.json();
+    if(data.ok){
+      document.getElementById('form-wrap').style.display='none';
+      document.getElementById('success').style.display='block';
+    }else{
+      throw new Error('rejected');
+    }
+  }catch{
+    errEl.style.display='block';
+    btn.disabled=false;btn.textContent='Start the conversation';
+  }
+});
+</script>
+</body>
+</html>

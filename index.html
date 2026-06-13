@@ -223,6 +223,8 @@
     <a href="#proof">Proof</a>
     <a href="#think">How I think</a>
     <a href="#start">Start</a>
+    <a href="/use-cases">Use case builder</a>
+    <a href="/contact">Work with me</a>
   </div>
 </nav>
 
@@ -633,6 +635,15 @@ toggleBtns.forEach(b=>b.addEventListener('click',()=>{
   b.classList.add('active');
   document.getElementById(b.dataset.pane).classList.add('active');
 }));
+
+/* ---- active nav ---- */
+(function(){
+  const p=location.pathname;
+  document.querySelectorAll('.navlinks a').forEach(a=>{
+    const h=a.getAttribute('href');
+    if(h.startsWith('/')&&h===p)a.style.color='var(--ink)';
+  });
+})();
 
 /* ---- scroll reveal ---- */
 const io=new IntersectionObserver(entries=>{

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Use case builder · Nova</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Sora:wght@200;300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#07080d;--bg2:#0b0e18;--panel:#10131f;--panel2:#161b2b;
+    --ink:#eef1f8;--muted:#b3bcd6;--soft:#7c87a6;
+    --blue:#7fb3ff;--violet:#c9a6ff;--mint:#7ce7c0;--gold:#f0c66e;
+    --line:rgba(160,180,230,.14);--line2:rgba(160,180,230,.08);--radius:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:'Sora',sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden}
+  ::selection{background:rgba(127,179,255,.3);color:#fff}
+  a{color:var(--blue);text-decoration:none}
+
+  /* NAV */
+  nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,8,13,.85),rgba(7,8,13,.4));border-bottom:1px solid var(--line2);transition:padding .3s}
+  nav.shrink{padding:10px 6vw}
+  .brand{display:flex;align-items:center;gap:11px;font-family:'Fraunces',serif;font-weight:900;font-size:21px;letter-spacing:-.01em;color:var(--ink)}
+  .orb{width:26px;height:26px;border-radius:50%;background:conic-gradient(from 200deg,var(--blue),var(--violet),var(--mint),var(--gold),var(--blue));box-shadow:0 0 22px rgba(127,179,255,.55);animation:spin 9s linear infinite;flex-shrink:0}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .navlinks{display:flex;gap:6px}
+  .navlinks a{font-size:13px;color:var(--soft);padding:8px 13px;border-radius:999px;transition:.2s;font-weight:400}
+  .navlinks a:hover{color:var(--ink);background:rgba(127,179,255,.1)}
+  .navlinks a.active{color:var(--ink)}
+  @media(max-width:760px){.navlinks{display:none}}
+
+  /* PAGE HEADER */
+  .page-head{padding:140px 6vw 56px;max-width:860px;margin:0 auto}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+  .page-head h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(36px,5vw,62px);line-height:1.05;letter-spacing:-.03em;margin-bottom:16px}
+  .page-head h1 em{font-family:'Fraunces',serif;font-style:italic;font-weight:500;color:var(--blue)}
+  .page-head p{font-size:17px;color:var(--muted);line-height:1.65;max-width:54ch}
+
+  /* BUILDER */
+  .builder{max-width:860px;margin:0 auto;padding:0 6vw 100px}
+
+  .step{margin-bottom:40px;transition:opacity .35s}
+  .step.locked{opacity:.28;pointer-events:none}
+
+  .step-head{display:flex;align-items:baseline;gap:12px;margin-bottom:22px;flex-wrap:wrap;row-gap:6px}
+  .step-num{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--blue);text-transform:uppercase;flex-shrink:0}
+  .step-qlabel{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:21px;letter-spacing:-.02em}
+  .step-summary{font-size:14px;color:var(--muted);margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+  .edit-btn{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--blue);background:none;border:1px solid rgba(127,179,255,.3);padding:4px 11px;border-radius:999px;cursor:pointer;transition:.2s;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+  .edit-btn:hover{background:rgba(127,179,255,.1)}
+
+  .choice-cards{display:flex;flex-wrap:wrap;gap:11px}
+  .choice-card{
+    flex:1 1 calc(50% - 6px);min-width:200px;
+    padding:17px 20px;
+    background:linear-gradient(165deg,var(--panel2),var(--panel));
+    border:1px solid var(--line);border-radius:14px;
+    font-family:'Sora',sans-serif;font-size:14.5px;font-weight:400;
+    color:var(--muted);cursor:pointer;text-align:left;
+    transition:border-color .2s,color .2s,box-shadow .2s,transform .18s;
+    position:relative;line-height:1.4;
+  }
+  .choice-card:hover{border-color:var(--blue);color:var(--ink);transform:translateY(-2px)}
+  .choice-card.selected{border-color:var(--blue);color:var(--ink);box-shadow:0 0 0 1px var(--blue),0 14px 36px rgba(0,0,0,.5)}
+  .choice-card.selected::after{content:"✓";position:absolute;top:13px;right:14px;font-size:12px;color:var(--blue);font-weight:700}
+  @media(max-width:600px){.choice-card{flex:1 1 100%}}
+
+  /* per-step accent colors */
+  #step2 .choice-card:hover{border-color:var(--violet);color:var(--ink)}
+  #step2 .choice-card.selected{border-color:var(--violet);box-shadow:0 0 0 1px var(--violet),0 14px 36px rgba(0,0,0,.5)}
+  #step2 .choice-card.selected::after{color:var(--violet)}
+  #step3 .choice-card:hover{border-color:var(--mint);color:var(--ink)}
+  #step3 .choice-card.selected{border-color:var(--mint);box-shadow:0 0 0 1px var(--mint),0 14px 36px rgba(0,0,0,.5)}
+  #step3 .choice-card.selected::after{color:var(--mint)}
+
+  /* connector */
+  .step-conn{width:2px;height:28px;background:linear-gradient(var(--blue),var(--violet));opacity:.28;margin:0 0 12px 4px}
+
+  /* RESULT */
+  #result{
+    display:none;
+    background:linear-gradient(135deg,rgba(127,179,255,.09),rgba(201,166,255,.07),rgba(124,231,192,.06));
+    border:1px solid rgba(127,179,255,.22);
+    border-radius:24px;padding:44px;margin-top:8px;
+  }
+  #result.visible{display:block;animation:slideUp .55s cubic-bezier(.2,.7,.3,1)}
+  @keyframes slideUp{from{opacity:0;transform:translateY(36px)}to{opacity:1;transform:translateY(0)}}
+  .result-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mint);margin-bottom:18px}
+  .result-pills{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:24px}
+  .sel-pill{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.05em;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--soft)}
+  .result-headline{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(24px,3.4vw,38px);line-height:1.1;letter-spacing:-.03em;margin-bottom:18px;color:var(--ink)}
+  .result-body{font-size:16px;color:var(--muted);line-height:1.72;max-width:64ch;margin-bottom:10px}
+  .result-priority{font-size:15px;color:var(--soft);line-height:1.65;max-width:64ch;margin-bottom:32px;font-style:italic}
+  .result-caps{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:32px}
+  @media(max-width:580px){.result-caps{grid-template-columns:1fr}}
+  .rcap{background:linear-gradient(165deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
+  .rcap::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+  .rcap[data-a="mint"]::before{background:var(--mint)}
+  .rcap[data-a="violet"]::before{background:var(--violet)}
+  .rcap[data-a="gold"]::before{background:var(--gold)}
+  .rcap h4{font-family:'Fraunces',serif;font-weight:600;font-size:15.5px;letter-spacing:-.01em;margin-bottom:5px;color:var(--ink)}
+  .rcap p{font-size:13px;color:var(--soft);line-height:1.55}
+  .result-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  .cta-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:999px;background:linear-gradient(120deg,var(--blue),var(--violet));color:#07080d;font-family:'Sora',sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;text-decoration:none;transition:.2s;border:none}
+  .cta-btn:hover{opacity:.88;transform:translateY(-1px)}
+  .restart-btn{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--soft);background:none;border:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:.2s}
+  .restart-btn:hover{color:var(--ink)}
+  @media(max-width:600px){#result{padding:28px 22px}}
+
+  footer{text-align:center;padding:50px 6vw 70px;color:var(--soft);font-size:13px;line-height:1.8;border-top:1px solid var(--line2)}
+  footer .fbrand{font-family:'Fraunces',serif;font-weight:600;color:var(--muted);font-size:16px;display:block;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="brand" href="/"><span class="orb"></span>Nova</a>
+  <div class="navlinks">
+    <a href="/#help">What I help with</a>
+    <a href="/#where">Where it fits</a>
+    <a href="/#proof">Proof</a>
+    <a href="/#think">How I think</a>
+    <a href="/use-cases">Use case builder</a>
+    <a href="/contact">Work with me</a>
+  </div>
+</nav>
+
+<div class="page-head">
+  <div class="eyebrow">Use case builder</div>
+  <h1>Build a picture of <em>how Nova can help you.</em></h1>
+  <p>Answer three questions and see what a collaboration could look like. There are no wrong answers.</p>
+</div>
+
+<div class="builder">
+
+  <div class="step" id="step1">
+    <div class="step-head">
+      <span class="step-num">01</span>
+      <span class="step-qlabel">Who are you?</span>
+    </div>
+    <div class="choice-cards" data-step="1">
+      <button class="choice-card" data-val="uni">A university, college, or K-12 institution</button>
+      <button class="choice-card" data-val="np">A nonprofit or community organization</button>
+      <button class="choice-card" data-val="team">A small team or founder</button>
+      <button class="choice-card" data-val="ind">An individual with a project</button>
+    </div>
+  </div>
+
+  <div class="step-conn" id="conn1" style="display:none"></div>
+
+  <div class="step locked" id="step2">
+    <div class="step-head">
+      <span class="step-num">02</span>
+      <span class="step-qlabel">What is the core problem?</span>
+    </div>
+    <div class="choice-cards" data-step="2">
+      <button class="choice-card" data-val="knowledge">Our knowledge lives in people's heads and old documents</button>
+      <button class="choice-card" data-val="privacy">We need AI but our data cannot leave our walls</button>
+      <button class="choice-card" data-val="manual">Our workflows are too manual and slow</button>
+      <button class="choice-card" data-val="start">We want to try AI but do not know where to start</button>
+      <button class="choice-card" data-val="collab">We need a technical collaborator who can also explain the work</button>
+    </div>
+  </div>
+
+  <div class="step-conn" id="conn2" style="display:none"></div>
+
+  <div class="step locked" id="step3">
+    <div class="step-head">
+      <span class="step-num">03</span>
+      <span class="step-qlabel">What matters most right now?</span>
+    </div>
+    <div class="choice-cards" data-step="3">
+      <button class="choice-card" data-val="prototype">Seeing a working prototype fast</button>
+      <button class="choice-card" data-val="arch">Getting the architecture right before we build</button>
+      <button class="choice-card" data-val="training">Training the people who will use it</button>
+      <button class="choice-card" data-val="measure">Measuring whether it actually helps</button>
+      <button class="choice-card" data-val="convo">Just a conversation to think it through</button>
+    </div>
+  </div>
+
+  <div id="result">
+    <div class="result-eyebrow">Here is what Nova can do for you</div>
+    <div class="result-pills" id="rpills"></div>
+    <h2 class="result-headline" id="rheadline"></h2>
+    <p class="result-body" id="rbody"></p>
+    <p class="result-priority" id="rpriority"></p>
+    <div class="result-caps" id="rcaps"></div>
+    <div class="result-actions">
+      <a class="cta-btn" id="rcta" href="/contact">This sounds right, let me reach out</a>
+      <button class="restart-btn" id="restart">Start over</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span class="fbrand">Nova</span>
+  AI systems strategist · full-stack software engineer · higher-ed technologist · privacy-aware builder<br>
+  <a href="/">Back to the main page</a>
+</footer>
+
+<script>
+addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('shrink',scrollY>40)});
+
+/* active nav */
+document.querySelectorAll('.navlinks a').forEach(a=>{
+  if(a.getAttribute('href')===location.pathname)a.classList.add('active');
+});
+
+/* ---- data ---- */
+const CAPS={
+  'local-llm':    {l:'Local LLM deployment',      a:'mint',   d:'AI running entirely on hardware you control, with no data leaving your premises.'},
+  'ferpa':        {l:'FERPA-aware design',         a:'mint',   d:'Privacy-compliant systems built for higher education from the ground up.'},
+  'rag':          {l:'RAG pipeline',               a:'blue',   d:'Retrieval-augmented generation that grounds answers in your actual documents.'},
+  'federated':    {l:'Federated learning',         a:'mint',   d:'Train shared models across organizations while each institution\'s data stays local.'},
+  'knowledge-graph':{l:'Knowledge graph',          a:'violet', d:'Structure the knowledge living in your documents and your people\'s heads.'},
+  'data-pipeline':{l:'Data pipeline',              a:'blue',   d:'Turn raw institutional content into reviewed, model-ready structured data.'},
+  'human-review': {l:'Human review workflow',      a:'blue',   d:'AI drafts, humans approve. Review interfaces built into the pipeline from day one.'},
+  'agentic':      {l:'Agentic workflows',          a:'blue',   d:'Agents that hold state, hand off to humans, and automate the right things.'},
+  'api':          {l:'API integration',            a:'violet', d:'Connect your tools, automate handoffs, and build on what you already have.'},
+  'fullstack':    {l:'Full-stack delivery',        a:'violet', d:'The whole thing: backend, database, frontend, and the AI layer on top.'},
+  'advisory':     {l:'Advisory and scoping',       a:'gold',   d:'Cut through the noise. A focused conversation that saves months of wrong turns.'},
+  'ai-literacy':  {l:'AI literacy',                a:'gold',   d:'Plain-language training for the people who will use, manage, or decide on AI.'},
+  'evaluation':   {l:'Evaluation and measurement', a:'blue',   d:'Prove whether your AI change actually helped, with rubrics that don\'t grade the model on its own homework.'},
+  'privacy-arch': {l:'Privacy architecture',       a:'mint',   d:'Data boundary planning, model selection, and governance designed in from the start.'},
+};
+
+const R={
+  uni_privacy:    {h:'Private AI for your institution, running on your hardware',              b:'You need AI that works within your data boundaries. Nova builds systems that run on institutional hardware, never send student data to external vendors, and can be audited by your privacy office.',c:['local-llm','ferpa','rag','federated']},
+  uni_knowledge:  {h:'Structure your institutional knowledge before it walks out the door',    b:'Your expertise lives in people\'s heads, old documents, and disconnected systems. Nova can help you map, structure, and activate that knowledge in ways that survive staff turnover and scale beyond a few experts.',c:['knowledge-graph','data-pipeline','human-review','rag']},
+  uni_manual:     {h:'Automate the right higher ed workflows, keep humans where they matter',  b:'Higher education is full of repetitive tasks that drain faculty and staff time. Nova identifies what is safe to automate, builds the system, and keeps people in the loop where judgment is needed.',c:['agentic','data-pipeline','human-review','fullstack']},
+  uni_start:      {h:'A grounded AI strategy built for how institutions actually work',        b:'Most AI consultants have never navigated FERPA, campus procurement, or university governance. Nova has. A first conversation can clarify where AI actually fits, and what to avoid.',c:['advisory','ferpa','privacy-arch','ai-literacy']},
+  uni_collab:     {h:'A technical partner who speaks both AI and higher ed',                   b:'Twenty years inside institutions means Nova can build the system and explain it to your provost. You get a collaborator who understands the politics, the privacy law, and the pipeline.',c:['advisory','ferpa','fullstack','human-review']},
+  np_privacy:     {h:'AI your community can trust, because their data stays yours',            b:'Community organizations carry sensitive information about the people they serve. Nova builds AI systems that keep that data under your control, with governance designed to protect trust.',c:['privacy-arch','local-llm','human-review','rag']},
+  np_knowledge:   {h:'Capture your mission knowledge before it disappears',                   b:'Nonprofits run on institutional memory: program knowledge, community relationships, what works and what doesn\'t. Nova helps you structure that knowledge so it survives staff transitions and serves the mission.',c:['knowledge-graph','data-pipeline','human-review','advisory']},
+  np_manual:      {h:'Automate the admin burden, not the care',                               b:'Grant reporting, intake forms, case notes, volunteer coordination: these take time away from the mission. Nova helps you automate the right tasks while keeping human judgment where it matters.',c:['agentic','human-review','api','advisory']},
+  np_start:       {h:'AI that actually fits a mission-driven organization',                    b:'AI hype doesn\'t map cleanly onto nonprofit reality. Nova can help you separate what\'s useful from what\'s noise, and identify one concrete starting point that fits your budget and your values.',c:['advisory','ai-literacy','evaluation','data-pipeline']},
+  np_collab:      {h:'A technical collaborator who gets what your work is actually for',       b:'Mission-driven work needs a builder who understands why the ethical guardrails matter. Nova can build the system, explain it to your board, and make sure the humans stay in the loop.',c:['advisory','human-review','fullstack','ai-literacy']},
+  team_privacy:   {h:'AI that works on your data without exposing it',                        b:'Small teams often handle sensitive client or customer data. Nova builds AI workflows that use your information without shipping it to a vendor, with the data boundary designed from the start.',c:['privacy-arch','local-llm','rag','fullstack']},
+  team_knowledge: {h:'Turn what your team knows into a system that scales',                   b:'Your team\'s expertise is your advantage. Nova helps you structure it: knowledge bases, retrieval systems, and internal tools that make the right information findable when it matters.',c:['knowledge-graph','rag','data-pipeline','fullstack']},
+  team_manual:    {h:'Automate the right things and reclaim your focus',                      b:'Manual and slow is a tax on your attention. Nova finds the highest-leverage automation opportunities, builds them fast, and keeps the handoffs to humans clean.',c:['agentic','api','fullstack','human-review']},
+  team_start:     {h:'Your first real AI prototype, scoped right from the start',             b:'Most first AI projects are either too ambitious or too shallow. Nova helps you scope something concrete and achievable, then builds it so you have something real to show.',c:['advisory','fullstack','rag','evaluation']},
+  team_collab:    {h:'Senior AI judgment, without the senior AI headcount',                   b:'Nova can act as your on-demand technical collaborator: help you make the right architectural calls, build the proof of concept, and explain the tradeoffs to the rest of the team.',c:['advisory','fullstack','evaluation','agentic']},
+  ind_privacy:    {h:'Build something with your data that stays yours',                       b:'Your project involves information you care about protecting. Nova can help you design and build AI tools that use your data without handing it to a vendor.',c:['privacy-arch','local-llm','rag','advisory']},
+  ind_knowledge:  {h:'Turn your knowledge into something you can actually use',               b:'Whether it\'s research, notes, or years of accumulated expertise, Nova can help you structure and search your knowledge with AI that actually understands your material.',c:['knowledge-graph','rag','advisory','fullstack']},
+  ind_manual:     {h:'Cut the repetitive work and get back to what matters',                  b:'One person\'s manual workflow is still a real workflow. Nova can identify what\'s automatable, build something lightweight, and help you reclaim the time you\'re spending on the wrong tasks.',c:['agentic','api','fullstack','advisory']},
+  ind_start:      {h:'A single good conversation can save months of wrong turns',             b:'Starting with AI can feel overwhelming. Nova can help you figure out what you actually need, what you don\'t, and what a realistic first step looks like for someone working at your scale.',c:['advisory','ai-literacy','fullstack','evaluation']},
+  ind_collab:     {h:'A thinking partner who can also build the thing',                       b:'Sometimes you need someone to think through the idea with you, and then actually make it real. Nova does both: the strategy conversation and the implementation that follows.',c:['advisory','fullstack','rag','agentic']},
+};
+
+const PCTX={
+  prototype:'Speed matters here. The focus would be getting something working in your hands quickly, without cutting corners on the parts that are hard to fix later.',
+  arch:     'Getting the architecture right is the priority. The conversation starts with data boundaries, system design, and the decisions that are expensive to reverse, before writing a line of code.',
+  training: 'Training the people who will use it matters as much as building it. Nova brings both technical depth and the ability to explain it clearly to the people doing the daily work.',
+  measure:  'Measurement is built in from the start: rubrics, evaluation frameworks, and honest accounting of what improved and what didn\'t, not just a demo that looks good.',
+  convo:    'No pressure to have it figured out. The first step is a focused conversation, free of charge, to see if there\'s a fit and what the right next move might be.',
+};
+
+const WHO_LBL  ={uni:'University or K-12', np:'Nonprofit or community org', team:'Small team or founder', ind:'Individual'};
+const PROB_LBL ={knowledge:'Knowledge in people\'s heads', privacy:'Data cannot leave', manual:'Too manual and slow', start:'Don\'t know where to start', collab:'Need a collaborator who explains'};
+const PRIO_LBL ={prototype:'Working prototype fast', arch:'Architecture first', training:'Train the team', measure:'Measure the impact', convo:'Start with a conversation'};
+
+/* ---- state ---- */
+let S={s1:null,s2:null,s3:null};
+
+function selCard(stepEl,val){
+  stepEl.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
+  stepEl.querySelector(`[data-val="${val}"]`).classList.add('selected');
+}
+
+function setStepDone(id,label){
+  const h=document.querySelector(`#${id} .step-head`);
+  if(!h.querySelector('.step-summary')){
+    const sm=document.createElement('span');sm.className='step-summary';h.appendChild(sm);
+    const eb=document.createElement('button');eb.className='edit-btn';eb.textContent='Edit';
+    eb.addEventListener('click',()=>editStep(id));h.appendChild(eb);
+  }
+  h.querySelector('.step-summary').textContent=label;
+}
+
+function clearStepUI(id){
+  document.querySelectorAll(`#${id} .choice-card`).forEach(c=>c.classList.remove('selected'));
+  const h=document.querySelector(`#${id} .step-head`);
+  h.querySelector('.step-summary')?.remove();
+  h.querySelector('.edit-btn')?.remove();
+}
+
+function lock(id){const e=document.getElementById(id);e.classList.add('locked');e.classList.remove('unlocking');}
+function unlock(id){
+  const e=document.getElementById(id);
+  e.classList.remove('locked','unlocking');
+  void e.offsetWidth;
+  e.style.animation='none';void e.offsetWidth;e.style.animation='';
+  e.classList.add('unlocking');
+  e.style.animation='stepIn .5s cubic-bezier(.2,.7,.3,1)';
+  setTimeout(()=>{e.style.animation='';e.classList.remove('unlocking');},520);
+  setTimeout(()=>e.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+}
+
+function editStep(id){
+  const n=parseInt(id.replace('step',''));
+  clearStepUI(id);
+  if(n===1){S.s1=null;clearStepUI('step2');S.s2=null;lock('step2');clearStepUI('step3');S.s3=null;lock('step3');document.getElementById('conn1').style.display='none';document.getElementById('conn2').style.display='none';}
+  if(n===2){clearStepUI('step2');S.s2=null;clearStepUI('step3');S.s3=null;lock('step3');document.getElementById('conn2').style.display='none';}
+  if(n===3){clearStepUI('step3');S.s3=null;}
+  hideResult();
+}
+
+function hideResult(){const r=document.getElementById('result');r.classList.remove('visible');r.style.display='none';}
+
+function showResult(){
+  const key=`${S.s1}_${S.s2}`;
+  const res=R[key]||{h:'Nova can help with that',b:'This combination is a good fit for a focused conversation. Reach out and we can figure out the right starting point together.',c:['advisory','evaluation','fullstack']};
+  const pctx=PCTX[S.s3]||'';
+
+  document.getElementById('rheadline').textContent=res.h;
+  document.getElementById('rbody').textContent=res.b;
+  document.getElementById('rpriority').textContent=pctx;
+
+  const pills=document.getElementById('rpills');
+  pills.innerHTML='';
+  [WHO_LBL[S.s1],PROB_LBL[S.s2],PRIO_LBL[S.s3]].forEach(l=>{
+    const p=document.createElement('span');p.className='sel-pill';p.textContent=l;pills.appendChild(p);
+  });
+
+  const caps=document.getElementById('rcaps');
+  caps.innerHTML='';
+  res.c.forEach(k=>{
+    const c=CAPS[k];if(!c)return;
+    const el=document.createElement('div');el.className='rcap';el.setAttribute('data-a',c.a);
+    el.innerHTML=`<h4>${c.l}</h4><p>${c.d}</p>`;caps.appendChild(el);
+  });
+
+  const params=new URLSearchParams({who:S.s1,problem:S.s2,priority:S.s3});
+  document.getElementById('rcta').href=`/contact?${params}`;
+
+  const r=document.getElementById('result');
+  r.style.display='block';
+  void r.offsetWidth;
+  r.classList.add('visible');
+  setTimeout(()=>r.scrollIntoView({behavior:'smooth',block:'nearest'}),100);
+}
+
+/* ---- card clicks ---- */
+document.querySelectorAll('.choice-cards').forEach(group=>{
+  group.addEventListener('click',e=>{
+    const card=e.target.closest('.choice-card');if(!card)return;
+    const stepNum=parseInt(group.dataset.step);
+    const val=card.dataset.val;
+    const stepEl=group.closest('.step');
+
+    if(stepNum===1){
+      S.s1=val;selCard(stepEl,val);setStepDone('step1',card.textContent.trim());
+      if(S.s2){clearStepUI('step2');S.s2=null;}
+      if(S.s3){clearStepUI('step3');S.s3=null;}
+      hideResult();
+      document.getElementById('conn1').style.display='block';
+      document.getElementById('conn2').style.display='none';
+      lock('step3');unlock('step2');
+    }else if(stepNum===2){
+      S.s2=val;selCard(stepEl,val);setStepDone('step2',card.textContent.trim());
+      if(S.s3){clearStepUI('step3');S.s3=null;}
+      hideResult();
+      document.getElementById('conn2').style.display='block';
+      lock('step3');setTimeout(()=>unlock('step3'),40);
+    }else if(stepNum===3){
+      S.s3=val;selCard(stepEl,val);setStepDone('step3',card.textContent.trim());
+      showResult();
+    }
+  });
+});
+
+document.getElementById('restart').addEventListener('click',()=>{
+  S={s1:null,s2:null,s3:null};
+  ['step1','step2','step3'].forEach(id=>clearStepUI(id));
+  lock('step2');lock('step3');
+  document.getElementById('conn1').style.display='none';
+  document.getElementById('conn2').style.display='none';
+  hideResult();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
