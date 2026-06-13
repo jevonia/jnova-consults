@@ -22,7 +22,7 @@
 
 
   /* NAV */
-  nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,8,13,.85),rgba(7,8,13,.4));border-bottom:1px solid var(--line2);transition:padding .3s}
+  nav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px 6vw;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,8,13,.85),rgba(7,8,13,.4));border-bottom:1px solid var(--line2);transition:padding .3s,transform .35s}
   nav.shrink{padding:10px 6vw}
   .brand{display:flex;align-items:center;gap:11px;font-family:'Fraunces',serif;font-weight:900;font-size:21px;letter-spacing:-.01em;color:var(--ink)}
   .brand-avatar{display:none;width:32px;height:32px;border-radius:50%;padding:2px;background:conic-gradient(from 200deg,var(--blue),var(--violet),var(--mint),var(--gold),var(--blue));overflow:hidden;flex-shrink:0;margin-left:4px}
@@ -48,7 +48,7 @@
   .mob-nav a:hover{color:var(--ink)}
   .mob-nav a.nav-feature{color:var(--ink);font-weight:500;padding:13px 16px;margin-top:12px;background:linear-gradient(120deg,rgba(127,179,255,.14),rgba(201,166,255,.11));border-radius:10px;border:1px solid rgba(127,179,255,.26);border-bottom:none}
   .mob-nav a.nav-contact{color:var(--mint)}
-  @media(max-width:760px){.navlinks{display:none}.hamburger{display:flex}.brand-avatar{display:flex}}
+  @media(max-width:760px){.navlinks{display:none}.hamburger{display:flex}.brand-avatar{display:flex}nav.nav-hidden{transform:translateY(-100%)}}
 
   /* PAGE HEADER */
   .page-head{padding:140px 6vw 56px;max-width:860px;margin:0 auto}
@@ -130,6 +130,10 @@
 
   footer{text-align:center;padding:50px 6vw 70px;color:var(--soft);font-size:13px;line-height:1.8;border-top:1px solid var(--line2)}
   footer .fbrand{font-family:'Fraunces',serif;font-weight:600;color:var(--muted);font-size:16px;display:block;margin-bottom:8px}
+  .step-hint{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.08em;color:var(--soft);font-weight:400;opacity:.6;margin-left:8px}
+  .step-continue{display:none;margin-top:18px;background:linear-gradient(120deg,rgba(127,179,255,.12),rgba(201,166,255,.09));border:1px solid rgba(127,179,255,.3);color:var(--ink);font-weight:500;font-size:13.5px;padding:10px 22px;border-radius:999px;cursor:pointer;font-family:'Bricolage Grotesque',sans-serif;transition:.2s;letter-spacing:.01em}
+  .step-continue:hover{background:linear-gradient(120deg,rgba(127,179,255,.22),rgba(201,166,255,.18));border-color:rgba(127,179,255,.55)}
+  .step.locked .step-continue{display:none!important}
 </style>
 </head>
 <body>
@@ -168,7 +172,7 @@
   <div class="step" id="step1">
     <div class="step-head">
       <span class="step-num">01</span>
-      <span class="step-qlabel">Who are you?</span>
+      <span class="step-qlabel">Who are you? <span class="step-hint">choose up to 2</span></span>
     </div>
     <div class="choice-cards" data-step="1">
       <button class="choice-card" data-val="uni">A university, college, or K-12 institution</button>
@@ -183,7 +187,7 @@
   <div class="step locked" id="step2">
     <div class="step-head">
       <span class="step-num">02</span>
-      <span class="step-qlabel">What is the core problem?</span>
+      <span class="step-qlabel">What is the core problem? <span class="step-hint">choose up to 2</span></span>
     </div>
     <div class="choice-cards" data-step="2">
       <button class="choice-card" data-val="knowledge">Our knowledge lives in people's heads and old documents</button>
@@ -199,7 +203,7 @@
   <div class="step locked" id="step3">
     <div class="step-head">
       <span class="step-num">03</span>
-      <span class="step-qlabel">What matters most right now?</span>
+      <span class="step-qlabel">What matters most right now? <span class="step-hint">choose up to 2</span></span>
     </div>
     <div class="choice-cards" data-step="3">
       <button class="choice-card" data-val="prototype">Seeing a working prototype fast</button>
@@ -236,6 +240,7 @@ addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('
 const ham=document.getElementById('hamburger'),mob=document.getElementById('mob-nav');
 ham.addEventListener('click',()=>{const o=mob.classList.toggle('open');ham.classList.toggle('open');ham.setAttribute('aria-expanded',o);document.body.style.overflow=o?'hidden':'';});
 mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{mob.classList.remove('open');ham.classList.remove('open');ham.setAttribute('aria-expanded','false');document.body.style.overflow='';}));
+(function(){const nav=document.getElementById('nav');let t;function peek(){nav.classList.remove('nav-hidden');clearTimeout(t);if(window.innerWidth>760)return;const open=document.getElementById('mob-nav')?.classList.contains('open');if(!open)t=setTimeout(()=>nav.classList.add('nav-hidden'),3000);}peek();document.addEventListener('touchstart',peek,{passive:true});window.addEventListener('scroll',peek,{passive:true});})();
 
 /* active nav */
 document.querySelectorAll('.navlinks a').forEach(a=>{
@@ -296,21 +301,51 @@ const PROB_LBL ={knowledge:'Knowledge in people\'s heads', privacy:'Data cannot 
 const PRIO_LBL ={prototype:'Working prototype fast', arch:'Architecture first', training:'Train the team', measure:'Measure the impact', convo:'Start with a conversation'};
 
 /* ---- state ---- */
-let S={s1:null,s2:null,s3:null};
+let S={s1:[],s2:[],s3:[]};
 
-function selCard(stepEl,val){
-  stepEl.querySelectorAll('.choice-card').forEach(c=>c.classList.remove('selected'));
-  stepEl.querySelector(`[data-val="${val}"]`).classList.add('selected');
+/* continue buttons */
+function makeCont(stepId,label,onContinue){
+  const step=document.getElementById(stepId);
+  const btn=document.createElement('button');
+  btn.className='step-continue';btn.textContent=label;
+  btn.addEventListener('click',onContinue);
+  step.appendChild(btn);
+  return btn;
+}
+const cont1=makeCont('step1','Continue →',()=>{
+  setStepDone('step1',S.s1.map(v=>WHO_LBL[v]));
+  cont1.style.display='none';
+  document.getElementById('conn1').style.display='block';
+  document.getElementById('conn2').style.display='none';
+  lock('step3');unlock('step2');
+});
+const cont2=makeCont('step2','Continue →',()=>{
+  setStepDone('step2',S.s2.map(v=>PROB_LBL[v]));
+  cont2.style.display='none';
+  document.getElementById('conn2').style.display='block';
+  lock('step3');setTimeout(()=>unlock('step3'),40);
+});
+const cont3=makeCont('step3','See my use case →',()=>{
+  setStepDone('step3',S.s3.map(v=>PRIO_LBL[v]));
+  cont3.style.display='none';
+  showResult();
+});
+
+function toggleCard(stepEl,arr,val){
+  const card=stepEl.querySelector(`[data-val="${val}"]`);
+  const idx=arr.indexOf(val);
+  if(idx>=0){arr.splice(idx,1);card.classList.remove('selected');}
+  else if(arr.length<2){arr.push(val);card.classList.add('selected');}
 }
 
-function setStepDone(id,label){
+function setStepDone(id,labels){
   const h=document.querySelector(`#${id} .step-head`);
   if(!h.querySelector('.step-summary')){
     const sm=document.createElement('span');sm.className='step-summary';h.appendChild(sm);
     const eb=document.createElement('button');eb.className='edit-btn';eb.textContent='Edit';
     eb.addEventListener('click',()=>editStep(id));h.appendChild(eb);
   }
-  h.querySelector('.step-summary').textContent=label;
+  h.querySelector('.step-summary').textContent=labels.join(' + ');
 }
 
 function clearStepUI(id){
@@ -318,6 +353,8 @@ function clearStepUI(id){
   const h=document.querySelector(`#${id} .step-head`);
   h.querySelector('.step-summary')?.remove();
   h.querySelector('.edit-btn')?.remove();
+  const cb=document.querySelector(`#${id} .step-continue`);
+  if(cb)cb.style.display='none';
 }
 
 function lock(id){const e=document.getElementById(id);e.classList.add('locked');e.classList.remove('unlocking');}
@@ -335,38 +372,44 @@ function unlock(id){
 function editStep(id){
   const n=parseInt(id.replace('step',''));
   clearStepUI(id);
-  if(n===1){S.s1=null;clearStepUI('step2');S.s2=null;lock('step2');clearStepUI('step3');S.s3=null;lock('step3');document.getElementById('conn1').style.display='none';document.getElementById('conn2').style.display='none';}
-  if(n===2){clearStepUI('step2');S.s2=null;clearStepUI('step3');S.s3=null;lock('step3');document.getElementById('conn2').style.display='none';}
-  if(n===3){clearStepUI('step3');S.s3=null;}
+  if(n===1){S.s1=[];clearStepUI('step2');S.s2=[];lock('step2');clearStepUI('step3');S.s3=[];lock('step3');document.getElementById('conn1').style.display='none';document.getElementById('conn2').style.display='none';}
+  if(n===2){clearStepUI('step2');S.s2=[];clearStepUI('step3');S.s3=[];lock('step3');document.getElementById('conn2').style.display='none';}
+  if(n===3){clearStepUI('step3');S.s3=[];}
   hideResult();
 }
 
 function hideResult(){const r=document.getElementById('result');r.classList.remove('visible');r.style.display='none';}
 
 function showResult(){
-  const key=`${S.s1}_${S.s2}`;
+  const key=`${S.s1[0]}_${S.s2[0]}`;
   const res=R[key]||{h:'Nova can help with that',b:'This combination is a good fit for a focused conversation. Reach out and we can figure out the right starting point together.',c:['advisory','evaluation','fullstack']};
-  const pctx=PCTX[S.s3]||'';
+
+  const capKeys=[...res.c];
+  if(S.s2[1]){const r2=R[`${S.s1[0]}_${S.s2[1]}`];r2?.c?.forEach(k=>{if(!capKeys.includes(k))capKeys.push(k);});}
+  if(S.s1[1]){const r2=R[`${S.s1[1]}_${S.s2[0]}`];r2?.c?.forEach(k=>{if(!capKeys.includes(k))capKeys.push(k);});}
 
   document.getElementById('rheadline').textContent=res.h;
   document.getElementById('rbody').textContent=res.b;
-  document.getElementById('rpriority').textContent=pctx;
+  document.getElementById('rpriority').textContent=S.s3.map(v=>PCTX[v]).filter(Boolean).join(' ');
 
   const pills=document.getElementById('rpills');
   pills.innerHTML='';
-  [WHO_LBL[S.s1],PROB_LBL[S.s2],PRIO_LBL[S.s3]].forEach(l=>{
+  [...S.s1.map(v=>WHO_LBL[v]),...S.s2.map(v=>PROB_LBL[v]),...S.s3.map(v=>PRIO_LBL[v])].forEach(l=>{
     const p=document.createElement('span');p.className='sel-pill';p.textContent=l;pills.appendChild(p);
   });
 
   const caps=document.getElementById('rcaps');
   caps.innerHTML='';
-  res.c.forEach(k=>{
+  capKeys.slice(0,4).forEach(k=>{
     const c=CAPS[k];if(!c)return;
     const el=document.createElement('div');el.className='rcap';el.setAttribute('data-a',c.a);
     el.innerHTML=`<h4>${c.l}</h4><p>${c.d}</p>`;caps.appendChild(el);
   });
 
-  const params=new URLSearchParams({who:S.s1,problem:S.s2,priority:S.s3});
+  const params=new URLSearchParams();
+  S.s1.forEach(v=>params.append('who',v));
+  S.s2.forEach(v=>params.append('problem',v));
+  S.s3.forEach(v=>params.append('priority',v));
   document.getElementById('rcta').href=`/contact?${params}`;
 
   const r=document.getElementById('result');
@@ -385,29 +428,28 @@ document.querySelectorAll('.choice-cards').forEach(group=>{
     const stepEl=group.closest('.step');
 
     if(stepNum===1){
-      S.s1=val;selCard(stepEl,val);setStepDone('step1',card.textContent.trim());
-      if(S.s2){clearStepUI('step2');S.s2=null;}
-      if(S.s3){clearStepUI('step3');S.s3=null;}
+      toggleCard(stepEl,S.s1,val);
+      if(S.s2.length){clearStepUI('step2');S.s2=[];lock('step2');document.getElementById('conn1').style.display='none';}
+      if(S.s3.length){clearStepUI('step3');S.s3=[];lock('step3');document.getElementById('conn2').style.display='none';}
       hideResult();
-      document.getElementById('conn1').style.display='block';
-      document.getElementById('conn2').style.display='none';
-      lock('step3');unlock('step2');
+      cont1.style.display=S.s1.length>0?'block':'none';
     }else if(stepNum===2){
-      S.s2=val;selCard(stepEl,val);setStepDone('step2',card.textContent.trim());
-      if(S.s3){clearStepUI('step3');S.s3=null;}
+      toggleCard(stepEl,S.s2,val);
+      if(S.s3.length){clearStepUI('step3');S.s3=[];lock('step3');document.getElementById('conn2').style.display='none';}
       hideResult();
-      document.getElementById('conn2').style.display='block';
-      lock('step3');setTimeout(()=>unlock('step3'),40);
+      cont2.style.display=S.s2.length>0?'block':'none';
     }else if(stepNum===3){
-      S.s3=val;selCard(stepEl,val);setStepDone('step3',card.textContent.trim());
-      showResult();
+      toggleCard(stepEl,S.s3,val);
+      hideResult();
+      cont3.style.display=S.s3.length>0?'block':'none';
     }
   });
 });
 
 document.getElementById('restart').addEventListener('click',()=>{
-  S={s1:null,s2:null,s3:null};
+  S={s1:[],s2:[],s3:[]};
   ['step1','step2','step3'].forEach(id=>clearStepUI(id));
+  cont1.style.display='none';cont2.style.display='none';cont3.style.display='none';
   lock('step2');lock('step3');
   document.getElementById('conn1').style.display='none';
   document.getElementById('conn2').style.display='none';
